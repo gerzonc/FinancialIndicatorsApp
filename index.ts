@@ -1,25 +1,30 @@
-import { Navigation } from 'react-native-navigation';
+// import { Navigation } from 'react-native-navigation';
 
-import IndicatorDetail from './src/screens/IndicatorDetail';
-import Indicators from './src/screens/Indicators';
-import PriceDetail from './src/screens/PriceDetail';
+// import IndicatorDetail from './src/screens/IndicatorDetail';
+// import Indicators from './src/screens/Indicators';
+// import PriceDetail from './src/screens/PriceDetail';
 
-Navigation.registerComponent('Indicators', () => Indicators);
-Navigation.registerComponent('PriceDetail', () => PriceDetail);
-Navigation.registerComponent('IndicatorDetail', () => IndicatorDetail);
+// Navigation.registerComponent('Indicators', () => Indicators);
+// Navigation.registerComponent('PriceDetail', () => PriceDetail);
+// Navigation.registerComponent('IndicatorDetail', () => IndicatorDetail);
 
-Navigation.events().registerAppLaunchedListener(() => {
-  Navigation.setRoot({
-    root: {
-      stack: {
-        children: [
-          {
-            component: {
-              name: 'Indicators',
-            },
-          },
-        ],
-      },
-    },
-  });
-});
+// Navigation.events().registerAppLaunchedListener(() => {
+//   Navigation.setRoot({
+//     root: {
+//       stack: {
+//         children: [
+//           {
+//             component: {
+//               name: 'Indicators',
+//             },
+//           },
+//         ],
+//       },
+//     },
+//   });
+// });
+
+// In order to run Storybook you need to
+// comment everything above
+
+export { default } from './storybook';
