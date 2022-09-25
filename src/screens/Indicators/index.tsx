@@ -5,6 +5,13 @@ import {
   NavigationFunctionComponent,
 } from 'react-native-navigation';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
+const MyButton = () => (
+  <Icon.Button name="facebook" backgroundColor="#3b5998" onPress={() => {}}>
+    Login with Facebook
+  </Icon.Button>
+);
+
 const Indicators: NavigationFunctionComponent = ({ componentId }) => {
   return (
     <View>
@@ -26,6 +33,7 @@ const Indicators: NavigationFunctionComponent = ({ componentId }) => {
         }>
         <Text>Navigate to Settings</Text>
       </Pressable>
+      <MyButton />
     </View>
   );
 };
