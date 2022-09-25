@@ -4,7 +4,9 @@ import { AxiosResponse } from 'axios';
 import fetcher from './fetcher';
 import { IAllEcoIndicators, IEcoIndicator } from '../definitions/rest';
 
-export const getAll: () => Promise<void | IEcoIndicator[]> = () =>
+export const getAllEconomicIndicators: () => Promise<
+  void | IEcoIndicator[]
+> = () =>
   fetcher
     .get('/')
     .then((response: AxiosResponse<IAllEcoIndicators>) => {
