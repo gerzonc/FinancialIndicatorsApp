@@ -1,29 +1,48 @@
+import React, { memo, useEffect, useState } from 'react';
 import {
   View,
   Pressable,
-  ActivityIndicator,
   Alert,
   StyleSheet,
   FlatList,
+  Dimensions,
 } from 'react-native';
-import React, { memo, useEffect, useState } from 'react';
 import {
   Navigation,
   NavigationFunctionComponent,
 } from 'react-native-navigation';
+import {
+  ActivityIndicator,
+  Button,
+  Divider,
+  List,
+  Text,
+} from 'react-native-paper';
 import { useNetInfo } from '@react-native-community/netinfo';
 
-import { getAllEconomicIndicators } from '../../api/endpoints';
+import { theme } from '../../theme';
 import { storage } from '../../storage';
 import { IEcoIndicator } from '../../definitions/rest';
-import { Divider, List } from 'react-native-paper';
+import { getAllEconomicIndicators } from '../../api/endpoints';
+import { getResponsiveValue } from '../../helpers';
 
-const navigateTo = (
-  componentId: string,
-  screenName: 'IndicatorDetail' | 'PriceDetail' | 'Indicators',
-  indicatorName: string,
-  code: string
-) =>
+type TScreenName = 'IndicatorDetail' | 'PriceDetail' | 'Indicators';
+
+interface INavigateTo {
+  componentId: string;
+  screenName: TScreenName;
+  indicatorName: string;
+  code: string;
+}
+
+const dimensions = Dimensions.get('window');
+
+const navigateTo = ({
+  componentId,
+  screenName,
+  indicatorName,
+  code,
+}: INavigateTo) =>
   Navigation.push(componentId, {
     component: {
       name: screenName,
@@ -41,18 +60,20 @@ const navigateTo = (
   });
 
 const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
-  const [isDataAvailable, setIsDataAvailable] = useState(false);
   const { isConnected } = useNetInfo();
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<IEcoIndicator[]>([]);
 
   const getData = async () => {
-    setIsDataAvailable(true);
+    setLoading(true);
     await getAllEconomicIndicators()
       .then(response => {
         storage.set('ALL_INDICATORS', JSON.stringify(response));
         setData(response as IEcoIndicator[]);
+        setLoading(false);
       })
       .catch(error => {
+        setLoading(false);
         Alert.alert('Error', `Ha ocurrido un error: ${error}`);
       });
   };
@@ -60,19 +81,36 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
   useEffect(() => {
     if (!isConnected) {
       const storedData = storage.getString('ALL_INDICATORS');
-      const json = storedData ? JSON.parse(storedData) : null;
-      if (json) {
-        setIsDataAvailable(true);
-        setData(json);
+      if (storedData) {
+        const storedDataObj = JSON.parse(storedData);
+        setData(storedDataObj);
       }
+      setLoading(false);
     } else {
       getData();
     }
   }, []);
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator
+          animating={loading}
+          size={20}
+          color={theme.colors.primary}
+        />
+      </View>
+    );
+  }
+
   return !data.length ? (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator animating={!isDataAvailable} size={20} color="red" />
+    <View style={styles.container}>
+      <Text style={styles.emptyStateText} variant="headlineSmall">
+        No se adquirieron datos
+      </Text>
+      <Button mode="contained" onPress={getData}>
+        Reintentar
+      </Button>
     </View>
   ) : (
     <FlatList
@@ -84,21 +122,23 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
           <Pressable key={index} onPress={() => console.log(item)}>
             <List.Item
               title={item.nombre}
+              titleNumberOfLines={1}
               description={item.unidad_medida}
+              descriptionStyle={styles.description}
               right={props => (
                 <Pressable
                   onPress={() =>
-                    navigateTo(
+                    navigateTo({
                       componentId,
-                      'IndicatorDetail',
-                      item.nombre,
-                      item.codigo
-                    )
+                      screenName: 'IndicatorDetail',
+                      indicatorName: item.nombre,
+                      code: item.codigo,
+                    })
                   }>
                   <List.Icon
                     {...props}
                     icon="information-outline"
-                    color="blue"
+                    color={theme.colors.info}
                   />
                 </Pressable>
               )}
@@ -115,10 +155,16 @@ Indicators.displayName = 'Indicadores';
 export default Indicators;
 
 const styles = StyleSheet.create({
-  loadingContainer: {
+  container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  emptyStateText: {
+    marginBottom: getResponsiveValue({ value: 8, dimensions, theme }),
+  },
+  description: {
+    color: theme.colors.info,
   },
 });
 
