@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { theme } from './theme';
+
+export const dimensions = Dimensions.get('window');
 
 const globalStyles = StyleSheet.create({
   description: {

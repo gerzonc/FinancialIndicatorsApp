@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, List, Text } from 'react-native-paper';
-import {
-  View,
-  Alert,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  Platform,
-} from 'react-native';
+import { View, Alert, StyleSheet, ScrollView, Platform } from 'react-native';
 import { NavigationFunctionComponent } from 'react-native-navigation';
 
 import { theme } from '../../theme';
@@ -17,7 +10,7 @@ import { getEconomicIndicator } from '../../api/endpoints';
 import { LineChart } from 'react-native-chart-kit';
 import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
 import { Loading } from '../../components';
-import globalStyles from '../../globalStyles';
+import globalStyles, { dimensions } from '../../globalStyles';
 
 interface Props {
   code?: string;
@@ -31,8 +24,6 @@ interface IData {
   labels: string[];
   dataValues: number[];
 }
-
-const dimensions = Dimensions.get('window');
 
 const chartConfig: AbstractChartConfig = {
   propsForBackgroundLines: {
