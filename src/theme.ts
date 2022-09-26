@@ -13,15 +13,6 @@ export const theme = {
     l: 24,
     xl: 40,
   },
-  textVariants: {
-    header: {
-      fontSize: 36,
-      fontWeight: 'bold',
-    },
-    body: {
-      fontSize: 16,
-    },
-  },
   breakpoints: {
     smallPhone: 0,
     phone: 321,
