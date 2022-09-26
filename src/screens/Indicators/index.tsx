@@ -21,7 +21,8 @@ import { Divider, List } from 'react-native-paper';
 const navigateTo = (
   componentId: string,
   screenName: 'IndicatorDetail' | 'PriceDetail' | 'Indicators',
-  indicatorName: string
+  indicatorName: string,
+  code: string
 ) =>
   Navigation.push(componentId, {
     component: {
@@ -32,6 +33,9 @@ const navigateTo = (
             text: indicatorName,
           },
         },
+      },
+      passProps: {
+        code,
       },
     },
   });
@@ -45,8 +49,7 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
     setIsDataAvailable(true);
     await getAllEconomicIndicators()
       .then(response => {
-        console.log({ response });
-        storage.set('STORED_DATA', JSON.stringify(response));
+        storage.set('ALL_INDICATORS', JSON.stringify(response));
         setData(response as IEcoIndicator[]);
       })
       .catch(error => {
@@ -56,7 +59,7 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
 
   useEffect(() => {
     if (!isConnected) {
-      const storedData = storage.getString('STORED_DATA');
+      const storedData = storage.getString('ALL_INDICATORS');
       const json = storedData ? JSON.parse(storedData) : null;
       if (json) {
         setIsDataAvailable(true);
@@ -85,7 +88,12 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
               right={props => (
                 <Pressable
                   onPress={() =>
-                    navigateTo(componentId, 'IndicatorDetail', item.nombre)
+                    navigateTo(
+                      componentId,
+                      'IndicatorDetail',
+                      item.nombre,
+                      item.codigo
+                    )
                   }>
                   <List.Icon
                     {...props}

@@ -2,11 +2,16 @@ import { Alert } from 'react-native';
 import { AxiosResponse } from 'axios';
 
 import fetcher from './fetcher';
-import { IAllEcoIndicators, IEcoIndicator } from '../definitions/rest';
+import {
+  IAllEcoIndicators,
+  IEcoIndicator,
+  IEcoIndicatorDetail,
+} from '../definitions/rest';
 
-export const getAllEconomicIndicators: () => Promise<
-  void | IEcoIndicator[]
-> = () =>
+/**
+ * @returns {IEcoIndicator[]} All economic indicators from API
+ */
+export const getAllEconomicIndicators = (): Promise<void | IEcoIndicator[]> =>
   fetcher
     .get('/')
     .then((response: AxiosResponse<IAllEcoIndicators>) => {
@@ -42,9 +47,14 @@ export const getAllEconomicIndicators: () => Promise<
     })
     .catch(error => Alert.alert('Error', `Ha ocurrido un error: ${error}`));
 
-export const getEconomicIndicator = (indicator: string) => {
+/**
+ * @param {string} indicator Code from the selected economic indicator
+ * @returns {IEcoIndicator[]} Detail from specified economic indicator
+ */
+export const getEconomicIndicator = (
+  indicator: string
+): Promise<void | IEcoIndicatorDetail> =>
   fetcher
     .get(`/${indicator}`)
-    .then(response => response.data)
+    .then((response: AxiosResponse<IEcoIndicatorDetail>) => response.data)
     .catch(error => Alert.alert('Error', `Ha ocurrido un error: ${error} `));
-};
