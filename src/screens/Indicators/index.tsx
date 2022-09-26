@@ -14,6 +14,7 @@ import { getAllEconomicIndicators } from '../../api/endpoints';
 import NoData from '../../components/NoData';
 import { Loading } from '../../components';
 import globalStyles from '../../globalStyles';
+import Animated, { SlideInLeft } from 'react-native-reanimated';
 
 type TScreenName = 'IndicatorDetail' | 'PriceDetail' | 'Indicators';
 
@@ -67,40 +68,42 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
 
   const renderItem = ({ item, index }: ListRenderItemInfo<IEcoIndicator>) => {
     return (
-      <Pressable
-        key={index}
-        onPress={() =>
-          navigateTo({
-            componentId,
-            screenName: 'PriceDetail',
-            indicatorName: item.nombre,
-            code: item.codigo,
-          })
-        }>
-        <List.Item
-          title={item.nombre}
-          titleNumberOfLines={1}
-          description={item.unidad_medida}
-          descriptionStyle={globalStyles.description}
-          right={props => (
-            <Pressable
-              onPress={() =>
-                navigateTo({
-                  componentId,
-                  screenName: 'IndicatorDetail',
-                  indicatorName: item.nombre,
-                  code: item.codigo,
-                })
-              }>
-              <List.Icon
-                {...props}
-                icon="information-outline"
-                color={theme.colors.info}
-              />
-            </Pressable>
-          )}
-        />
-      </Pressable>
+      <Animated.View entering={SlideInLeft}>
+        <Pressable
+          key={index}
+          onPress={() =>
+            navigateTo({
+              componentId,
+              screenName: 'PriceDetail',
+              indicatorName: item.nombre,
+              code: item.codigo,
+            })
+          }>
+          <List.Item
+            title={item.nombre}
+            titleNumberOfLines={1}
+            description={item.unidad_medida}
+            descriptionStyle={globalStyles.description}
+            right={props => (
+              <Pressable
+                onPress={() =>
+                  navigateTo({
+                    componentId,
+                    screenName: 'IndicatorDetail',
+                    indicatorName: item.nombre,
+                    code: item.codigo,
+                  })
+                }>
+                <List.Icon
+                  {...props}
+                  icon="information-outline"
+                  color={theme.colors.info}
+                />
+              </Pressable>
+            )}
+          />
+        </Pressable>
+      </Animated.View>
     );
   };
 
@@ -125,7 +128,6 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
     <NoData onPress={getData} />
   ) : (
     <FlatList
-      bounces={false}
       data={data}
       ItemSeparatorComponent={Divider}
       renderItem={renderItem}
