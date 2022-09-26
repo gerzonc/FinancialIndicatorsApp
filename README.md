@@ -5,6 +5,7 @@
 ### Table of Contents
   * [Pre-requisites](#prerequisites)
   * [Installation and usage](#installation)
+  * [Screenshots](#screenshots)
   * [Features](#features)
   * [Libraries](#libraries)
 
@@ -34,7 +35,12 @@ or
 $ npx react-native run-ios
 ```
 
+## <a name="screenshots"></a> Screenshots
+
+
+
 ## <a name="features"></a> Features
+<img width="250" src="https://user-images.githubusercontent.com/36211892/192273123-5af32ab5-66ed-4002-914c-590d179d7386.png" /><img width="250" src="https://user-images.githubusercontent.com/36211892/192273306-b0d6a011-0a64-4191-bced-be1bf769323a.png" /><img width="250" src="https://user-images.githubusercontent.com/36211892/192273477-6aae563a-27dd-4697-bdc3-66e1cfe78801.png" />
 
 1. List all economic indicators available through the provided API
 2. Display specific economic indicator data and graph
