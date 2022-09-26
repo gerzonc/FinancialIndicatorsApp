@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, List, Text } from 'react-native-paper';
-import { View, Alert, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Alert,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import { NavigationFunctionComponent } from 'react-native-navigation';
 
 import { theme } from '../../theme';
@@ -107,7 +114,10 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
       <ActivityIndicator color={theme.colors.info} />
     </View>
   ) : (
-    <View style={styles.container}>
+    <ScrollView
+      bounces={false}
+      style={{ flex: 1 }}
+      contentContainerStyle={styles.container}>
       <Text variant="displayMedium" style={styles.header}>
         ${data?.lastValue}
       </Text>
@@ -150,7 +160,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
         style={styles.graph}
         bezier
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -160,7 +170,7 @@ export default IndicatorDetail;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    ...(Platform.OS === 'ios' && { flex: 1 }),
     padding: getResponsiveValue({ value: 8, dimensions, theme }),
   },
   header: {
