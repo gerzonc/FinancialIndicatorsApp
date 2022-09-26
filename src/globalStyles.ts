@@ -7,7 +7,7 @@ const globalStyles = StyleSheet.create({
   description: {
     color: theme.colors.info,
   },
-  noDataContainer: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, List, Text } from 'react-native-paper';
-import { View, Alert, StyleSheet, Platform } from 'react-native';
+import { List, Text } from 'react-native-paper';
+import { Alert, StyleSheet, Platform } from 'react-native';
 import { NavigationFunctionComponent } from 'react-native-navigation';
 
 import { theme } from '../../theme';
@@ -9,7 +9,7 @@ import { getResponsiveValue } from '../../helpers';
 import { getEconomicIndicator } from '../../api/endpoints';
 import { LineChart } from 'react-native-chart-kit';
 import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
-import { Loading } from '../../components';
+import { Loading, NoData } from '../../components';
 import globalStyles, { dimensions } from '../../globalStyles';
 import Animated, { SlideInRight } from 'react-native-reanimated';
 
@@ -37,6 +37,7 @@ const chartConfig: AbstractChartConfig = {
   labelColor: () => theme.colors.foreground,
   style: {
     borderRadius: 16,
+    paddingHorizontal: 14,
   },
   useShadowColorFromDataset: true,
   propsForDots: {
@@ -102,9 +103,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   }
 
   return !data ? (
-    <View style={globalStyles.noDataContainer}>
-      <ActivityIndicator color={theme.colors.info} />
-    </View>
+    <NoData onPress={getData} />
   ) : (
     <Animated.ScrollView
       entering={SlideInRight}
@@ -144,8 +143,8 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
           legend: [`${data.name} en las últimas 10 fechas`],
         }}
         width={dimensions.width}
-        height={getResponsiveValue({ value: 286, dimensions, theme })}
-        verticalLabelRotation={30}
+        height={getResponsiveValue({ value: 384, dimensions, theme })}
+        verticalLabelRotation={35}
         withInnerLines
         withOuterLines
         chartConfig={chartConfig}
