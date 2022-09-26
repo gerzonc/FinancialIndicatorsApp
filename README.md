@@ -5,7 +5,6 @@
 ### Table of Contents
   * [Pre-requisites](#prerequisites)
   * [Installation and usage](#installation)
-  * [Screenshots](#screenshot)
   * [Features](#features)
   * [Libraries](#libraries)
 
@@ -40,17 +39,6 @@ $ npx react-native run-ios
 1. List all economic indicators available through the provided API
 2. Display specific economic indicator data and graph
 3. List price detail for specific economic indicator
-
-## <a name="screenshot"></a> Screenshots
-
-<p align="center">
-   <img src="https://user-images.githubusercontent.com/36211892/166177310-f7555469-a143-4367-b872-5e6576e235d3.png" width="250"/>
-   <img src="https://user-images.githubusercontent.com/36211892/166177325-6a83310c-3f2f-4e71-81be-716e9a03f5b1.png" width="250"/>
-   <img src="https://user-images.githubusercontent.com/36211892/166177527-a37ae5d7-a867-48ff-a3bb-2db008c615d6.png" width="250"/>
-   <img src="https://user-images.githubusercontent.com/36211892/166177574-59a89049-9a14-446a-bb44-6a446efee0f0.png" width="250"/>
-   <img src="https://user-images.githubusercontent.com/36211892/166177626-b4ba5b49-b2d2-49ad-bf8b-4b4f81f8dfd3.png" width="250"/>
-   <img src="https://user-images.githubusercontent.com/36211892/166178146-0f7fdf36-8ecd-4bb9-bd52-da78d7826bc5.png" width="250"/>
-</p>
 
 ## <a name="libraries"></a> Libraries used
 ```json
