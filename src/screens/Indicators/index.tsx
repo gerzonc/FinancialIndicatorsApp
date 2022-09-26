@@ -1,11 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import {
-  Pressable,
-  Alert,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-} from 'react-native';
+import { Pressable, Alert, FlatList } from 'react-native';
 import {
   Navigation,
   NavigationFunctionComponent,
@@ -17,9 +11,9 @@ import { theme } from '../../theme';
 import { storage } from '../../storage';
 import { IEcoIndicator } from '../../definitions/rest';
 import { getAllEconomicIndicators } from '../../api/endpoints';
-import { getResponsiveValue } from '../../helpers';
 import NoData from '../../components/NoData';
 import { Loading } from '../../components';
+import globalStyles from '../../globalStyles';
 
 type TScreenName = 'IndicatorDetail' | 'PriceDetail' | 'Indicators';
 
@@ -29,8 +23,6 @@ interface INavigateTo {
   indicatorName: string;
   code: string;
 }
-
-const dimensions = Dimensions.get('window');
 
 const navigateTo = ({
   componentId,
@@ -113,7 +105,7 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
               title={item.nombre}
               titleNumberOfLines={1}
               description={item.unidad_medida}
-              descriptionStyle={styles.description}
+              descriptionStyle={globalStyles.description}
               right={props => (
                 <Pressable
                   onPress={() =>
@@ -142,20 +134,6 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
 Indicators.displayName = 'Indicadores';
 
 export default Indicators;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyStateText: {
-    marginBottom: getResponsiveValue({ value: 8, dimensions, theme }),
-  },
-  description: {
-    color: theme.colors.info,
-  },
-});
 
 Indicators.options = {
   topBar: {

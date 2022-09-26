@@ -1,7 +1,6 @@
-import { View, StyleSheet, Alert, Dimensions } from 'react-native';
+import { View, StyleSheet, Alert, Dimensions, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NavigationFunctionComponent } from 'react-native-navigation';
-import { FlatList } from 'react-native-gesture-handler';
 import { Divider, List, Text } from 'react-native-paper';
 
 import { storage } from '../../storage';
@@ -10,6 +9,7 @@ import { IEcoIndicatorDetail } from '../../definitions/rest';
 import { Loading, NoData } from '../../components';
 import { getResponsiveValue } from '../../helpers';
 import { theme } from '../../theme';
+import globalStyles from '../../globalStyles';
 
 interface Props {
   code?: string;
@@ -62,12 +62,12 @@ const PriceDetail: NavigationFunctionComponent<Props> = ({ code }) => {
           <List.Item
             key={index}
             title=""
-            right={props => (
-              <Text variant="bodyLarge" style={styles.date}>
+            right={() => (
+              <Text variant="bodyLarge" style={globalStyles.description}>
                 {new Date(item.fecha).toLocaleDateString()}
               </Text>
             )}
-            left={props => <Text variant="bodyLarge">${item.valor}</Text>}
+            left={() => <Text variant="bodyLarge">${item.valor}</Text>}
           />
         )}
       />
@@ -81,13 +81,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: getResponsiveValue({ value: 16, dimensions, theme }),
-  },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  date: {
-    color: theme.colors.info,
   },
 });

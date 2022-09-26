@@ -10,6 +10,7 @@ import { getEconomicIndicator } from '../../api/endpoints';
 import { LineChart } from 'react-native-chart-kit';
 import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
 import { Loading } from '../../components';
+import globalStyles from '../../globalStyles';
 
 interface Props {
   code?: string;
@@ -102,7 +103,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   }
 
   return !data ? (
-    <View style={styles.noDataContainer}>
+    <View style={globalStyles.noDataContainer}>
       <ActivityIndicator color={theme.colors.info} />
     </View>
   ) : (
@@ -115,17 +116,17 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
         <List.Item
           title="Nombre"
           description={data?.name}
-          descriptionStyle={styles.description}
+          descriptionStyle={globalStyles.description}
         />
         <List.Item
           title="Fecha"
           description={data?.lastDate}
-          descriptionStyle={styles.description}
+          descriptionStyle={globalStyles.description}
         />
         <List.Item
           title="Unidad de medida"
           description={data?.measureUnit}
-          descriptionStyle={styles.description}
+          descriptionStyle={globalStyles.description}
         />
       </List.Section>
       <LineChart
@@ -162,17 +163,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: getResponsiveValue({ value: 8, dimensions, theme }),
   },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   header: {
     color: theme.colors.info,
     fontWeight: 'bold',
-  },
-  description: {
-    color: theme.colors.info,
   },
   graph: {
     alignSelf: 'center',
