@@ -42,16 +42,15 @@ $ npx react-native run-ios
 
 ## <a name="libraries"></a> Libraries used
 ```json
-    "@react-native-community/netinfo": "^9.3.1",
+   "@react-native-community/netinfo": "^9.3.1",
     "axios": "^0.27.2",
     "react": "18.1.0",
     "react-native": "0.70.1",
     "react-native-chart-kit": "^6.12.0",
-    "react-native-gesture-handler": "^2.6.2",
     "react-native-mmkv": "^2.4.3",
     "react-native-navigation": "7.29.0",
     "react-native-paper": "5.0.0-rc.6",
-    "react-native-reanimated": "2.9.1",
+    "react-native-reanimated": "2.10.0",
     "react-native-svg": "^13.2.0",
     "react-native-vector-icons": "^9.2.0"
 ```
