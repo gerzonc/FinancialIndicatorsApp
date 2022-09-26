@@ -8,6 +8,8 @@ import { storage } from '../../storage';
 import { getResponsiveValue } from '../../helpers';
 import { getEconomicIndicator } from '../../api/endpoints';
 import { LineChart } from 'react-native-chart-kit';
+import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
+import { Loading } from '../../components';
 
 interface Props {
   code?: string;
@@ -24,7 +26,7 @@ interface IData {
 
 const dimensions = Dimensions.get('window');
 
-const chartConfig = {
+const chartConfig: AbstractChartConfig = {
   propsForBackgroundLines: {
     color: theme.colors.foreground,
   },
@@ -70,7 +72,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
                 const result = Math.round(
                   Math.abs(oldDate.valueOf() - today.valueOf()) / 1000 / 8400
                 );
-                return `${result}D`;
+                return `${result}Día(s)`;
               }),
             dataValues: response.serie
               .slice(0, 10)
@@ -96,15 +98,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   }, []);
 
   if (loading) {
-    return (
-      <View style={styles.noDataContainer}>
-        <ActivityIndicator
-          animating={loading}
-          size={20}
-          color={theme.colors.primary}
-        />
-      </View>
-    );
+    return <Loading loading={loading} />;
   }
 
   return !data ? (
@@ -117,7 +111,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
         ${data?.lastValue}
       </Text>
       <List.Section>
-        <List.Subheader>Información básica</List.Subheader>
+        <List.Subheader>Última actualización</List.Subheader>
         <List.Item
           title="Nombre"
           description={data?.name}
@@ -146,9 +140,9 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
           ],
           legend: [`${data.name} en las últimas 10 fechas`],
         }}
-        width={dimensions.width - 40}
-        height={getResponsiveValue({ value: 256, dimensions, theme })}
-        verticalLabelRotation={15}
+        width={dimensions.width}
+        height={getResponsiveValue({ value: 286, dimensions, theme })}
+        verticalLabelRotation={30}
         withInnerLines
         withOuterLines
         chartConfig={chartConfig}

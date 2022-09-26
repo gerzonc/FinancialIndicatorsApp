@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
 import {
-  View,
   Pressable,
   Alert,
   StyleSheet,
@@ -11,7 +10,7 @@ import {
   Navigation,
   NavigationFunctionComponent,
 } from 'react-native-navigation';
-import { ActivityIndicator, Divider, List } from 'react-native-paper';
+import { Divider, List } from 'react-native-paper';
 import { useNetInfo } from '@react-native-community/netinfo';
 
 import { theme } from '../../theme';
@@ -20,6 +19,7 @@ import { IEcoIndicator } from '../../definitions/rest';
 import { getAllEconomicIndicators } from '../../api/endpoints';
 import { getResponsiveValue } from '../../helpers';
 import NoData from '../../components/NoData';
+import { Loading } from '../../components';
 
 type TScreenName = 'IndicatorDetail' | 'PriceDetail' | 'Indicators';
 
@@ -87,15 +87,7 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
   }, []);
 
   if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator
-          animating={loading}
-          size={20}
-          color={theme.colors.primary}
-        />
-      </View>
-    );
+    return <Loading loading={loading} />;
   }
 
   return !data.length ? (
@@ -107,7 +99,16 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
       ItemSeparatorComponent={Divider}
       renderItem={({ item, index }) => {
         return (
-          <Pressable key={index} onPress={() => console.log(item)}>
+          <Pressable
+            key={index}
+            onPress={() =>
+              navigateTo({
+                componentId,
+                screenName: 'PriceDetail',
+                indicatorName: item.nombre,
+                code: item.codigo,
+              })
+            }>
             <List.Item
               title={item.nombre}
               titleNumberOfLines={1}

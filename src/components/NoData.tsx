@@ -1,12 +1,18 @@
 import { Dimensions, StyleSheet, View } from 'react-native';
 import React from 'react';
-import { Button, ButtonProps, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { getResponsiveValue } from '../helpers';
 import { theme } from '../theme';
 
 const dimensions = Dimensions.get('window');
 
-const NoData: React.FC<ButtonProps> = ({ onPress }) => {
+// Not required, but ButtonProps from react-native-paper
+// enforces the component to receives children as mandatory
+interface Props {
+  onPress: () => void;
+}
+
+const NoData: React.FC<Props> = ({ onPress }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.emptyStateText} variant="headlineSmall">
