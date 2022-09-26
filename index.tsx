@@ -1,5 +1,4 @@
 import React from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import { Provider } from 'react-native-paper';
 
@@ -11,11 +10,9 @@ Navigation.registerComponent(
   'Indicators',
   () => (props: NavigationComponentProps) =>
     (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Provider theme={{ version: 3 }}>
-          <Indicators {...props} />
-        </Provider>
-      </GestureHandlerRootView>
+      <Provider theme={{ version: 3 }}>
+        <Indicators {...props} />
+      </Provider>
     ),
   () => Indicators
 );
@@ -24,11 +21,9 @@ Navigation.registerComponent(
   'PriceDetail',
   () => (props: NavigationComponentProps) =>
     (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Provider theme={{ version: 3 }}>
-          <PriceDetail {...props} />
-        </Provider>
-      </GestureHandlerRootView>
+      <Provider theme={{ version: 3 }}>
+        <PriceDetail {...props} />
+      </Provider>
     ),
   () => PriceDetail
 );
@@ -37,11 +32,9 @@ Navigation.registerComponent(
   'IndicatorDetail',
   () => (props: NavigationComponentProps) =>
     (
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Provider theme={{ version: 3 }}>
-          <IndicatorDetail {...props} />
-        </Provider>
-      </GestureHandlerRootView>
+      <Provider theme={{ version: 3 }}>
+        <IndicatorDetail {...props} />
+      </Provider>
     ),
   () => IndicatorDetail
 );

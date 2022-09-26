@@ -1,7 +1,6 @@
-import { View, StyleSheet, Alert, Dimensions } from 'react-native';
+import { View, StyleSheet, Alert, Dimensions, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NavigationFunctionComponent } from 'react-native-navigation';
-import { FlatList } from 'react-native-gesture-handler';
 import { Divider, List, Text } from 'react-native-paper';
 
 import { storage } from '../../storage';
@@ -62,12 +61,12 @@ const PriceDetail: NavigationFunctionComponent<Props> = ({ code }) => {
           <List.Item
             key={index}
             title=""
-            right={props => (
+            right={() => (
               <Text variant="bodyLarge" style={styles.date}>
                 {new Date(item.fecha).toLocaleDateString()}
               </Text>
             )}
-            left={props => <Text variant="bodyLarge">${item.valor}</Text>}
+            left={() => <Text variant="bodyLarge">${item.valor}</Text>}
           />
         )}
       />
