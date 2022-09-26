@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, List, Text } from 'react-native-paper';
-import { View, Alert, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Alert, StyleSheet, Platform } from 'react-native';
 import { NavigationFunctionComponent } from 'react-native-navigation';
 
 import { theme } from '../../theme';
@@ -11,6 +11,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
 import { Loading } from '../../components';
 import globalStyles, { dimensions } from '../../globalStyles';
+import Animated, { SlideInRight } from 'react-native-reanimated';
 
 interface Props {
   code?: string;
@@ -105,9 +106,9 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
       <ActivityIndicator color={theme.colors.info} />
     </View>
   ) : (
-    <ScrollView
-      bounces={false}
-      style={{ flex: 1 }}
+    <Animated.ScrollView
+      entering={SlideInRight}
+      style={styles.scroll}
       contentContainerStyle={styles.container}>
       <Text variant="displayMedium" style={styles.header}>
         ${data?.lastValue}
@@ -151,7 +152,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
         style={styles.graph}
         bezier
       />
-    </ScrollView>
+    </Animated.ScrollView>
   );
 };
 
@@ -163,6 +164,9 @@ const styles = StyleSheet.create({
   container: {
     ...(Platform.OS === 'ios' && { flex: 1 }),
     padding: getResponsiveValue({ value: 8, dimensions, theme }),
+  },
+  scroll: {
+    flex: 1,
   },
   header: {
     color: theme.colors.info,

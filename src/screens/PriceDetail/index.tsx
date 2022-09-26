@@ -16,6 +16,7 @@ import { Loading, NoData } from '../../components';
 import { getResponsiveValue } from '../../helpers';
 import { theme } from '../../theme';
 import globalStyles, { dimensions } from '../../globalStyles';
+import Animated, { SlideInRight } from 'react-native-reanimated';
 
 interface Props {
   code?: string;
@@ -47,16 +48,18 @@ const PriceDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   };
 
   const renderItem = ({ item, index }: ListRenderItemInfo<ISerie>) => (
-    <List.Item
-      key={index}
-      title=""
-      right={() => (
-        <Text variant="bodyLarge" style={globalStyles.description}>
-          {new Date(item.fecha).toLocaleDateString()}
-        </Text>
-      )}
-      left={() => <Text variant="bodyLarge">${item.valor}</Text>}
-    />
+    <Animated.View entering={SlideInRight}>
+      <List.Item
+        key={index}
+        title=""
+        right={() => (
+          <Text variant="bodyLarge" style={globalStyles.description}>
+            {new Date(item.fecha).toLocaleDateString()}
+          </Text>
+        )}
+        left={() => <Text variant="bodyLarge">${item.valor}</Text>}
+      />
+    </Animated.View>
   );
 
   useEffect(() => {
@@ -72,7 +75,6 @@ const PriceDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   ) : (
     <View style={styles.container}>
       <FlatList
-        bounces={false}
         data={data?.serie}
         ItemSeparatorComponent={Divider}
         renderItem={renderItem}
