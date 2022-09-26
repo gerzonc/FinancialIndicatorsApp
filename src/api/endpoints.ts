@@ -7,6 +7,7 @@ import {
   IEcoIndicator,
   IEcoIndicatorDetail,
 } from '../definitions/rest';
+import { isEconomicIndicator } from '../helpers';
 
 /**
  * @returns {IEcoIndicator[]} All economic indicators from API
@@ -15,35 +16,11 @@ export const getAllEconomicIndicators = (): Promise<void | IEcoIndicator[]> =>
   fetcher
     .get('/')
     .then((response: AxiosResponse<IAllEcoIndicators>) => {
-      const {
-        uf,
-        ivp,
-        dolar,
-        dolar_intercambio,
-        euro,
-        ipc,
-        utm,
-        imacec,
-        tpm,
-        libra_cobre,
-        tasa_desempleo,
-        bitcoin,
-      } = response.data;
+      const formatData = Object.values(response.data).filter(value =>
+        isEconomicIndicator(value)
+      );
 
-      return [
-        { ...uf },
-        { ...ivp },
-        { ...dolar },
-        { ...dolar_intercambio },
-        { ...euro },
-        { ...ipc },
-        { ...utm },
-        { ...imacec },
-        { ...tpm },
-        { ...libra_cobre },
-        { ...tasa_desempleo },
-        { ...bitcoin },
-      ];
+      return formatData;
     })
     .catch(error => Alert.alert('Error', `Ha ocurrido un error: ${error}`));
 
