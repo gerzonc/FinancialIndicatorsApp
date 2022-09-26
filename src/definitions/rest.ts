@@ -8,7 +8,7 @@ export type TCodigo =
   | 'euro'
   | 'ipc'
   | 'utm'
-  | 'imanec'
+  | 'imacec'
   | 'tpm'
   | 'libra_cobre'
   | 'tasa_desempleo'

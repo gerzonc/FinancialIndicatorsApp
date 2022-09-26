@@ -1,77 +1,141 @@
+import React, { memo, useEffect, useState } from 'react';
 import {
-  View,
-  Text,
   Pressable,
-  ActivityIndicator,
   Alert,
   StyleSheet,
+  FlatList,
+  Dimensions,
 } from 'react-native';
-import React, { memo, useEffect, useState } from 'react';
 import {
   Navigation,
   NavigationFunctionComponent,
 } from 'react-native-navigation';
+import { Divider, List } from 'react-native-paper';
 import { useNetInfo } from '@react-native-community/netinfo';
 
-import { getAllEconomicIndicators } from '../../api/endpoints';
+import { theme } from '../../theme';
 import { storage } from '../../storage';
 import { IEcoIndicator } from '../../definitions/rest';
+import { getAllEconomicIndicators } from '../../api/endpoints';
+import { getResponsiveValue } from '../../helpers';
+import NoData from '../../components/NoData';
+import { Loading } from '../../components';
+
+type TScreenName = 'IndicatorDetail' | 'PriceDetail' | 'Indicators';
+
+interface INavigateTo {
+  componentId: string;
+  screenName: TScreenName;
+  indicatorName: string;
+  code: string;
+}
+
+const dimensions = Dimensions.get('window');
+
+const navigateTo = ({
+  componentId,
+  screenName,
+  indicatorName,
+  code,
+}: INavigateTo) =>
+  Navigation.push(componentId, {
+    component: {
+      name: screenName,
+      options: {
+        topBar: {
+          title: {
+            text: indicatorName,
+          },
+        },
+      },
+      passProps: {
+        code,
+      },
+    },
+  });
 
 const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
-  const [isDataAvailable, setIsDataAvailable] = useState(false);
   const { isConnected } = useNetInfo();
-  const [data, setData] = useState<void | IEcoIndicator[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<IEcoIndicator[]>([]);
 
   const getData = async () => {
-    setIsDataAvailable(true);
+    setLoading(true);
     await getAllEconomicIndicators()
       .then(response => {
-        storage.set('STORED_DATA', JSON.stringify(response));
-        setData(response);
+        storage.set('ALL_INDICATORS', JSON.stringify(response));
+        setData(response as IEcoIndicator[]);
+        setLoading(false);
       })
       .catch(error => {
+        setLoading(false);
         Alert.alert('Error', `Ha ocurrido un error: ${error}`);
       });
   };
 
   useEffect(() => {
     if (!isConnected) {
-      const storedData = storage.getString('STORED_DATA');
-      const json = storedData ? JSON.parse(storedData) : null;
-      if (json) {
-        setIsDataAvailable(true);
-        setData(json);
+      const storedData = storage.getString('ALL_INDICATORS');
+      if (storedData) {
+        const storedDataObj = JSON.parse(storedData);
+        setData(storedDataObj);
       }
+      setLoading(false);
     } else {
       getData();
     }
   }, []);
 
-  return !isDataAvailable ? (
-    <View style={styles.loadingContainer}>
-      <ActivityIndicator animating={!isDataAvailable} size={20} color="red" />
-    </View>
+  if (loading) {
+    return <Loading loading={loading} />;
+  }
+
+  return !data.length ? (
+    <NoData onPress={getData} />
   ) : (
-    <View>
-      <Text>HomeScreen</Text>
-      <Pressable
-        onPress={() =>
-          Navigation.push(componentId, {
-            component: {
-              name: 'IndicatorDetail',
-              options: {
-                topBar: {
-                  title: {
-                    text: 'Indicator',
-                  },
-                },
-              },
-            },
-          })
-        }>
-        <Text>Navigate to Settings</Text>
-      </Pressable>
-    </View>
+    <FlatList
+      bounces={false}
+      data={data}
+      ItemSeparatorComponent={Divider}
+      renderItem={({ item, index }) => {
+        return (
+          <Pressable
+            key={index}
+            onPress={() =>
+              navigateTo({
+                componentId,
+                screenName: 'PriceDetail',
+                indicatorName: item.nombre,
+                code: item.codigo,
+              })
+            }>
+            <List.Item
+              title={item.nombre}
+              titleNumberOfLines={1}
+              description={item.unidad_medida}
+              descriptionStyle={styles.description}
+              right={props => (
+                <Pressable
+                  onPress={() =>
+                    navigateTo({
+                      componentId,
+                      screenName: 'IndicatorDetail',
+                      indicatorName: item.nombre,
+                      code: item.codigo,
+                    })
+                  }>
+                  <List.Icon
+                    {...props}
+                    icon="information-outline"
+                    color={theme.colors.info}
+                  />
+                </Pressable>
+              )}
+            />
+          </Pressable>
+        );
+      }}
+    />
   );
 });
 
@@ -80,9 +144,23 @@ Indicators.displayName = 'Indicadores';
 export default Indicators;
 
 const styles = StyleSheet.create({
-  loadingContainer: {
+  container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  emptyStateText: {
+    marginBottom: getResponsiveValue({ value: 8, dimensions, theme }),
+  },
+  description: {
+    color: theme.colors.info,
+  },
 });
+
+Indicators.options = {
+  topBar: {
+    title: {
+      text: 'Indicadores',
+    },
+  },
+};
