@@ -108,7 +108,16 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
   };
 
   useEffect(() => {
-    getData();
+    if (!isConnected) {
+      const storedData = storage.getString('ALL_INDICATORS');
+      if (storedData) {
+        const storedDataObj = JSON.parse(storedData);
+        setData(storedDataObj);
+      }
+      setLoading(false);
+    } else {
+      getData();
+    }
   }, []);
 
   if (loading) {
