@@ -11,13 +11,7 @@ import {
   Navigation,
   NavigationFunctionComponent,
 } from 'react-native-navigation';
-import {
-  ActivityIndicator,
-  Button,
-  Divider,
-  List,
-  Text,
-} from 'react-native-paper';
+import { ActivityIndicator, Divider, List } from 'react-native-paper';
 import { useNetInfo } from '@react-native-community/netinfo';
 
 import { theme } from '../../theme';
@@ -25,6 +19,7 @@ import { storage } from '../../storage';
 import { IEcoIndicator } from '../../definitions/rest';
 import { getAllEconomicIndicators } from '../../api/endpoints';
 import { getResponsiveValue } from '../../helpers';
+import NoData from '../../components/NoData';
 
 type TScreenName = 'IndicatorDetail' | 'PriceDetail' | 'Indicators';
 
@@ -104,14 +99,7 @@ const Indicators: NavigationFunctionComponent = memo(({ componentId }) => {
   }
 
   return !data.length ? (
-    <View style={styles.container}>
-      <Text style={styles.emptyStateText} variant="headlineSmall">
-        No se adquirieron datos
-      </Text>
-      <Button mode="contained" onPress={getData}>
-        Reintentar
-      </Button>
-    </View>
+    <NoData onPress={getData} />
   ) : (
     <FlatList
       bounces={false}

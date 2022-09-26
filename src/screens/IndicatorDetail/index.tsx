@@ -5,12 +5,12 @@ import { NavigationFunctionComponent } from 'react-native-navigation';
 
 import { theme } from '../../theme';
 import { storage } from '../../storage';
-import { ISerie } from '../../definitions/rest';
 import { getResponsiveValue } from '../../helpers';
 import { getEconomicIndicator } from '../../api/endpoints';
+import { LineChart } from 'react-native-chart-kit';
 
 interface Props {
-  code: string;
+  code?: string;
 }
 
 interface IData {
@@ -18,16 +18,40 @@ interface IData {
   measureUnit: string;
   lastDate: string;
   lastValue: number;
-  serie: ISerie[];
+  labels: string[];
+  dataValues: number[];
 }
 
 const dimensions = Dimensions.get('window');
 
+const chartConfig = {
+  propsForBackgroundLines: {
+    color: theme.colors.foreground,
+  },
+  backgroundGradientFrom: theme.colors.background,
+  backgroundGradientTo: theme.colors.background,
+  fillShadowGradientFrom: theme.colors.foreground,
+  color: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
+  labelColor: () => theme.colors.foreground,
+  style: {
+    borderRadius: 16,
+  },
+  useShadowColorFromDataset: true,
+  propsForDots: {
+    r: '6',
+    strokeWidth: '2',
+    stroke: theme.colors.background,
+    fill: theme.colors.info,
+  },
+};
+
 const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<IData>({} as IData);
 
   const getData = async () => {
-    await getEconomicIndicator(code)
+    setLoading(true);
+    await getEconomicIndicator(code as string)
       .then(response => {
         if (response) {
           const formattedResponse = {
@@ -37,7 +61,21 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
               'en-US'
             ),
             lastValue: response.serie[0].valor,
-            serie: response.serie.slice(0, 9),
+            labels: response.serie
+              .slice(0, 10)
+              .reverse()
+              .map(value => {
+                const oldDate = new Date(value.fecha);
+                const today = new Date();
+                const result = Math.round(
+                  Math.abs(oldDate.valueOf() - today.valueOf()) / 1000 / 8400
+                );
+                return `${result}D`;
+              }),
+            dataValues: response.serie
+              .slice(0, 10)
+              .reverse()
+              .map(value => value.valor),
           };
           storage.set(
             `ECONOMIC_INDICATOR_${code}`,
@@ -45,8 +83,10 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
           );
           setData(formattedResponse);
         }
+        setLoading(false);
       })
       .catch(error => {
+        setLoading(false);
         Alert.alert('Error', `Ha ocurrido un error: ${error}`);
       });
   };
@@ -54,6 +94,18 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   useEffect(() => {
     getData();
   }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.noDataContainer}>
+        <ActivityIndicator
+          animating={loading}
+          size={20}
+          color={theme.colors.primary}
+        />
+      </View>
+    );
+  }
 
   return !data ? (
     <View style={styles.noDataContainer}>
@@ -82,6 +134,27 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
           descriptionStyle={styles.description}
         />
       </List.Section>
+      <LineChart
+        data={{
+          labels: data?.labels,
+          datasets: [
+            {
+              data: data?.dataValues,
+              color: () => theme.colors.info,
+              strokeWidth: 2,
+            },
+          ],
+          legend: [`${data.name} en los últimos 10 días`],
+        }}
+        width={dimensions.width - 40}
+        height={getResponsiveValue({ value: 256, dimensions, theme })}
+        verticalLabelRotation={15}
+        withInnerLines
+        withOuterLines
+        chartConfig={chartConfig}
+        style={styles.graph}
+        bezier
+      />
     </View>
   );
 };
@@ -93,7 +166,7 @@ export default IndicatorDetail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: getResponsiveValue({ value: 16, dimensions, theme }),
+    padding: getResponsiveValue({ value: 8, dimensions, theme }),
   },
   noDataContainer: {
     flex: 1,
@@ -106,5 +179,8 @@ const styles = StyleSheet.create({
   },
   description: {
     color: theme.colors.info,
+  },
+  graph: {
+    alignSelf: 'center',
   },
 });
