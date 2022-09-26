@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, List, Text } from 'react-native-paper';
-import { View, Alert, StyleSheet, ScrollView, Platform } from 'react-native';
+import { View, Alert, StyleSheet, Platform } from 'react-native';
 import { NavigationFunctionComponent } from 'react-native-navigation';
 
 import { theme } from '../../theme';
