@@ -16,6 +16,7 @@
     "react-native": "0.70.1",
     "react-native-mmkv": "^2.4.3",
     "react-native-navigation": "7.29.0",
+    "react-native-paper": "5.0.0-rc.6",
     "react-native-vector-icons": "^9.2.0"
   },
   "devDependencies": {
