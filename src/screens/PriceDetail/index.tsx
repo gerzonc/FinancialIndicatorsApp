@@ -1,20 +1,25 @@
-import { View, StyleSheet, Alert, Dimensions, FlatList } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Alert,
+  FlatList,
+  ListRenderItemInfo,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { NavigationFunctionComponent } from 'react-native-navigation';
 import { Divider, List, Text } from 'react-native-paper';
 
 import { storage } from '../../storage';
 import { getEconomicIndicator } from '../../api/endpoints';
-import { IEcoIndicatorDetail } from '../../definitions/rest';
+import { IEcoIndicatorDetail, ISerie } from '../../definitions/rest';
 import { Loading, NoData } from '../../components';
 import { getResponsiveValue } from '../../helpers';
 import { theme } from '../../theme';
+import globalStyles, { dimensions } from '../../globalStyles';
 
 interface Props {
   code?: string;
 }
-
-const dimensions = Dimensions.get('window');
 
 const PriceDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   const [loading, setLoading] = useState(true);
@@ -41,6 +46,19 @@ const PriceDetail: NavigationFunctionComponent<Props> = ({ code }) => {
       });
   };
 
+  const renderItem = ({ item, index }: ListRenderItemInfo<ISerie>) => (
+    <List.Item
+      key={index}
+      title=""
+      right={() => (
+        <Text variant="bodyLarge" style={globalStyles.description}>
+          {new Date(item.fecha).toLocaleDateString()}
+        </Text>
+      )}
+      left={() => <Text variant="bodyLarge">${item.valor}</Text>}
+    />
+  );
+
   useEffect(() => {
     getData();
   }, []);
@@ -57,18 +75,7 @@ const PriceDetail: NavigationFunctionComponent<Props> = ({ code }) => {
         bounces={false}
         data={data?.serie}
         ItemSeparatorComponent={Divider}
-        renderItem={({ item, index }) => (
-          <List.Item
-            key={index}
-            title=""
-            right={() => (
-              <Text variant="bodyLarge" style={styles.date}>
-                {new Date(item.fecha).toLocaleDateString()}
-              </Text>
-            )}
-            left={() => <Text variant="bodyLarge">${item.valor}</Text>}
-          />
-        )}
+        renderItem={renderItem}
       />
     </View>
   );
@@ -80,13 +87,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: getResponsiveValue({ value: 16, dimensions, theme }),
-  },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  date: {
-    color: theme.colors.info,
   },
 });

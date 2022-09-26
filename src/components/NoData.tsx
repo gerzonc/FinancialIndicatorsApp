@@ -1,13 +1,12 @@
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Button, Text } from 'react-native-paper';
 import { getResponsiveValue } from '../helpers';
 import { theme } from '../theme';
-
-const dimensions = Dimensions.get('window');
+import { dimensions } from '../globalStyles';
 
 // Not required, but ButtonProps from react-native-paper
-// enforces the component to receives children as mandatory
+// enforces the component to receive a children component as mandatory
 interface Props {
   onPress: () => void;
 }
@@ -34,6 +33,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyStateText: {
-    marginBottom: getResponsiveValue({ value: 8, dimensions, theme }),
+    marginBottom: getResponsiveValue({
+      value: 8,
+      dimensions,
+      theme,
+    }),
   },
 });

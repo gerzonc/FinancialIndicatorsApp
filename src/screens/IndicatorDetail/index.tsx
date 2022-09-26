@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, List, Text } from 'react-native-paper';
-import {
-  View,
-  Alert,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-  Platform,
-} from 'react-native';
+import { View, Alert, StyleSheet, ScrollView, Platform } from 'react-native';
 import { NavigationFunctionComponent } from 'react-native-navigation';
 
 import { theme } from '../../theme';
@@ -17,6 +10,7 @@ import { getEconomicIndicator } from '../../api/endpoints';
 import { LineChart } from 'react-native-chart-kit';
 import { AbstractChartConfig } from 'react-native-chart-kit/dist/AbstractChart';
 import { Loading } from '../../components';
+import globalStyles, { dimensions } from '../../globalStyles';
 
 interface Props {
   code?: string;
@@ -30,8 +24,6 @@ interface IData {
   labels: string[];
   dataValues: number[];
 }
-
-const dimensions = Dimensions.get('window');
 
 const chartConfig: AbstractChartConfig = {
   propsForBackgroundLines: {
@@ -109,7 +101,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
   }
 
   return !data ? (
-    <View style={styles.noDataContainer}>
+    <View style={globalStyles.noDataContainer}>
       <ActivityIndicator color={theme.colors.info} />
     </View>
   ) : (
@@ -125,17 +117,17 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
         <List.Item
           title="Nombre"
           description={data?.name}
-          descriptionStyle={styles.description}
+          descriptionStyle={globalStyles.description}
         />
         <List.Item
           title="Fecha"
           description={data?.lastDate}
-          descriptionStyle={styles.description}
+          descriptionStyle={globalStyles.description}
         />
         <List.Item
           title="Unidad de medida"
           description={data?.measureUnit}
-          descriptionStyle={styles.description}
+          descriptionStyle={globalStyles.description}
         />
       </List.Section>
       <LineChart
@@ -172,17 +164,9 @@ const styles = StyleSheet.create({
     ...(Platform.OS === 'ios' && { flex: 1 }),
     padding: getResponsiveValue({ value: 8, dimensions, theme }),
   },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   header: {
     color: theme.colors.info,
     fontWeight: 'bold',
-  },
-  description: {
-    color: theme.colors.info,
   },
   graph: {
     alignSelf: 'center',
