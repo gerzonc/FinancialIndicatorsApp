@@ -144,7 +144,7 @@ const IndicatorDetail: NavigationFunctionComponent<Props> = ({ code }) => {
               strokeWidth: 2,
             },
           ],
-          legend: [`${data.name} en los últimos 10 días`],
+          legend: [`${data.name} en las últimas 10 fechas`],
         }}
         width={dimensions.width - 40}
         height={getResponsiveValue({ value: 256, dimensions, theme })}
