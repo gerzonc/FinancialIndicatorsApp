@@ -47,7 +47,7 @@ $ npx react-native run-ios
 
 ## <a name="libraries"></a> Libraries used
 ```json
-   "@react-native-community/netinfo": "^9.3.1",
+    "@react-native-community/netinfo": "^9.3.1",
     "axios": "^0.27.2",
     "react": "18.1.0",
     "react-native": "0.70.1",
